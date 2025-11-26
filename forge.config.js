@@ -24,7 +24,7 @@ export default {
                     name: 'musea-guide'
                 },
                 authToken: process.env.GITHUB_TOKEN,
-                prerelease: true
+                prerelease: false
             }
         }
     ],
