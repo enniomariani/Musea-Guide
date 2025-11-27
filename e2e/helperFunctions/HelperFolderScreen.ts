@@ -3,7 +3,7 @@ import {$} from "@wdio/globals";
 export async function openFolderByItemId(itemIdInList: number): Promise<void> {
     let folderName: string = await $('#item' + itemIdInList.toString() + ' #title').getText();
 
-    console.log("open folder: ", itemIdInList, folderName)
+    console.log("Test / Open folder: ", itemIdInList, folderName);
     await $('#item' + itemIdInList.toString()).click();
 
     await browser.waitUntil(async () => {
@@ -12,6 +12,8 @@ export async function openFolderByItemId(itemIdInList: number): Promise<void> {
 }
 
 export async function searchForString(searchStr: string): Promise<void> {
+    console.log("Test / Search: ", searchStr);
+
     await $('#searchField').click();
 
     if (searchStr !== "")
@@ -25,10 +27,14 @@ export async function searchForString(searchStr: string): Promise<void> {
  * @returns {Promise<void>}
  */
 export async function selectModus(modus: number): Promise<void> {
+    console.log("Test / Select Modus: ", modus.toString());
+
     await $('#modus' + modus.toString()).click();
 }
 
 export async function clickBackBtn(parentFolderName: string): Promise<void> {
+    console.log("Test / Click back, expected parent-folder-name: ", parentFolderName);
+
     await $('#backBtn').click();
 
     if (parentFolderName == "")
@@ -55,12 +61,15 @@ export async function openTagAdminForListItemId(itemId: number): Promise<void> {
 }
 
 export async function closeTagAdmin(): Promise<void> {
+    console.log("Test / Close Tag-Admin");
+
     await $( '#btnClose').click();
     await $('#fullScreenTagAdmin').waitForExist({ reverse: true });
-
 }
 
 export async function openTagInTagModus(itemIdInList: number): Promise<void> {
+    console.log("Test / Open Tag: ", itemIdInList.toString());
+
     let tagName: string = await $('#item' + itemIdInList.toString() + ' #title').getText();
 
     await $('#item' + itemIdInList.toString()).click();

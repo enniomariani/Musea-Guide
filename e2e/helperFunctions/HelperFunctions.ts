@@ -56,7 +56,7 @@ export function createAndSaveSavedMediaStationJSON(nameMediaStation:string, ipCo
         }
     ]};
 
-    console.log("write media-station-json: ", ipController, nameMediaStation);
+    console.log("Test / write media-station-json: ", ipController, nameMediaStation);
 
     writeFileSync(savedMediaStationFilePath, JSON.stringify(json));
 }
@@ -79,10 +79,10 @@ export async function initWSS(): Promise<void> {
 
             receivedCommandHistory.push(completeCommand);
 
-            console.log("----------- SERVER RECEIVED MESSAGE: ", completeCommand, completeCommandAsStr, wssExpectedCommands.get(completeCommandAsStr));
+            console.log("-- Server / received message: ", completeCommandAsStr," answer to that: ", wssExpectedCommands.get(completeCommandAsStr));
 
             if (wssExpectedCommands.has(completeCommandAsStr)) {
-                console.log("----------- THIS ANSWER WILL BE SENT TO THAT: ", wssExpectedCommands.get(completeCommandAsStr))
+                console.log("-- Server / answer message: ", wssExpectedCommands.get(completeCommandAsStr))
                 //send answer to guide-app
                 ws.send(ConvertNetworkData.encodeCommand(...wssExpectedCommands.get(completeCommandAsStr) as string[]));
             }
@@ -90,10 +90,10 @@ export async function initWSS(): Promise<void> {
             //if the received command is a content-PUT-command for the contents, save the contents-json to a temporary json
             if (completeCommand.length === 3 && completeCommand[0] === "contents" && completeCommand[1] === "put") {
                 temporarySavedContentsJSON = completeCommand[2].toString();
-                console.log("SET CONTENTS ON MEDIA-APP: ", temporarySavedContentsJSON)
+                console.log("-- Server / save contents.json: ", temporarySavedContentsJSON)
                 //if the received command is a content-GET-command for the contents, send the saved contents-json
             } else if (completeCommand.length === 2 && completeCommand[0] === "contents" && completeCommand[1] === "get") {
-                console.log("SEND CONTENTS FROM MEDIA-APP: ", temporarySavedContentsJSON)
+                console.log("-- Server / send contents.json: ", temporarySavedContentsJSON)
                 ws.send(ConvertNetworkData.encodeCommand("contents", "put", temporarySavedContentsJSON));
             }
         });
@@ -102,15 +102,15 @@ export async function initWSS(): Promise<void> {
 
 export function removeAllSavedFiles() {
 
-    console.log("REMOVE OLD FILES: ", savedMediaStationFilePath, existsSync(savedMediaStationFilePath))
+    console.log("-- REMOVE OLD FILES: ", savedMediaStationFilePath, existsSync(savedMediaStationFilePath))
 
     if (existsSync(savedMediaStationFilePath)) {
-        console.log("savedMediaStation-JSON exists,  Delete: ", savedMediaStationFilePath);
+        console.log("--- savedMediaStation-JSON exists,  Delete: ", savedMediaStationFilePath);
         rmSync(savedMediaStationFilePath, {force: true});
     }
 
     if (existsSync(savedTempDirMS0)) {
-        console.log("temporary saved MS exists for MS 0,  Delete: ", savedTempDirMS0);
+        console.log("--- temporary saved MS exists for MS 0,  Delete: ", savedTempDirMS0);
         rmSync(savedTempDirMS0, {force: true, recursive: true});
     }
 }

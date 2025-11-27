@@ -1,4 +1,6 @@
 export async function openMediaStation(id:number, expectToBeAbleToOpen:boolean): Promise<void> {
+    console.log("Test / Open MediaStation: ", id, " expectToBeAbleToOpen: ", expectToBeAbleToOpen);
+
     //open mediastation
     await $('#item' + id.toString()).click();
 
@@ -15,6 +17,8 @@ export async function openMediaStation(id:number, expectToBeAbleToOpen:boolean):
 }
 
 export async function exitMediaStation(): Promise<void> {
+    console.log("Test / Exit MediaStation");
+
     await $('#exitBtn').click();
     //wait until the dialog to close the MS is shown
     await $('#btnYes').waitForDisplayed({timeout: 30000});
@@ -27,6 +31,8 @@ export async function exitMediaStation(): Promise<void> {
 }
 
 export async function restartApp():Promise<void>{
+    console.log("Test / Restart App");
+
     await browser.reloadSession();
     await $('#infoText').waitForDisplayed({ timeout: 30000, reverse:true});
 }
