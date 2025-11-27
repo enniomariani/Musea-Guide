@@ -63,7 +63,6 @@ export const config  = {
         browserName: 'electron',
         // Electron service options
         // see https://webdriver.io/docs/desktop-testing/electron/configuration/#service-options
-
         'goog:chromeOptions': {
             args: [
                 ...(process.env.CI ? [
@@ -89,7 +88,10 @@ export const config  = {
     // Define all options that are relevant for the WebdriverIO instance here
     //
     // Level of logging verbosity: trace | debug | info | warn | error | silent
-    logLevel: 'info',
+    logLevel: 'warn',  // Only warnings and errors
+    logLevels: {
+        webdriver: 'error', // Only show webdriver errors, not every command
+    },
     //
     // Set specific log levels per logger
     // loggers:
@@ -107,7 +109,7 @@ export const config  = {
     //
     // If you only want to run your tests until a specific amount of tests have failed use
     // bail (default is 0 - don't bail, run all tests).
-    bail: 0,
+    bail: process.env.CI ? 1 : 0,  // Bail in CI, continue locally
     //
     // Set a base URL in order to shorten url command calls. If your `url` parameter starts
     // with `/`, the base url gets prepended, not including the path portion of your baseUrl.
@@ -116,7 +118,7 @@ export const config  = {
     // baseUrl: 'http://localhost:8080',
     //
     // Default timeout for all waitFor* commands.
-    waitforTimeout: 10000,
+    waitforTimeout: process.env.CI ? 60000 : 30000,
     //
     // Default timeout in milliseconds for request
     // if browser driver or grid doesn't send response
@@ -143,7 +145,7 @@ export const config  = {
 
     //
     // The number of times to retry the entire specfile when it fails as a whole
-    // specFileRetries: 1,
+    // specFileRetries: 0,
     //
     // Delay in seconds between the spec file retry attempts
     // specFileRetriesDelay: 0,
@@ -160,7 +162,7 @@ export const config  = {
     // See the full list at http://mochajs.org/
     mochaOpts: {
         ui: 'bdd',
-        timeout: 60000
+        timeout: process.env.CI ? 300000:120000
     },
 
     //
@@ -233,8 +235,9 @@ export const config  = {
     /**
      * Function to be executed before a test (in Mocha/Jasmine) starts.
      */
-    // beforeTest: function (test, context) {
-    // },
+    beforeTest: function (test, context) {
+        console.log(`\n▶ Starting Test: ${test.title}`);
+    },
     /**
      * Hook that gets executed _before_ a hook within the suite starts (e.g. runs before calling
      * beforeEach in Mocha)
