@@ -2,7 +2,7 @@
   "name": "musea-guide",
   "author": "Ennio Mariani",
   "email": "mail@enniomariani.ch",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "description": "Guide-App to play media on the Musea media players",
   "type": "module",
   "main": "./build/main/main.js",
