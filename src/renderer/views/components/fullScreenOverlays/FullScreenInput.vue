@@ -4,7 +4,7 @@
       <Icon id="closeBtn" class="close-btn"
             name="close-medium" color-second="var(--color-main)" @click="close"/>
       <div class="infoText">{{ title }}</div>
-      <BaseBtn :class="inputText===''?'save-btn--disabled':null" id="saveBtn" text-color="var(--color-primary-500-base)"
+      <BaseBtn class="save-btn" :class="inputText===''?'save-btn--disabled':null" id="saveBtn" text-color="var(--color-primary-500-base)"
                bg-color="var(--color-primary-800)" bg-color-hover="var(--color-primary-800-hover)" @click.stop="save">
         {{ saveBtnName }}
       </BaseBtn>
@@ -62,20 +62,26 @@ function close() {
 .header {
   width: 100%;
   height: 100px;
-
   padding: 0 37px;
 
-  display: flex;
-  justify-content: space-between;
+  display: grid;
+  grid-template-columns: 1fr auto 1fr;
   align-items: center;
 }
 
 .infoText {
+  justify-self: center;
+
   color: var(--color-primary-500-base);
 }
 
 .close-btn {
+  justify-self: start;
   cursor: pointer;
+}
+
+.save-btn {
+  justify-self: end;
 }
 
 .save-btn--disabled {
