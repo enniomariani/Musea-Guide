@@ -1,4 +1,4 @@
-import {app} from 'electron';
+import {app, ipcMain} from 'electron';
 import { fileURLToPath } from 'url';
 import { dirname, join} from 'path';
 
@@ -6,6 +6,9 @@ import {CreateWindow} from "main/CreateWindow.js";
 import {GlobalSettingsFactory} from "main/globalSettings/GlobalSettingsFactory.js";
 import {InitSettings} from "main/globalSettings/InitSettings.js";
 import {MuseaClientMain} from "musea-client/main";
+import {LoadJSON} from "./LoadJSON.js";
+import {readFileSync} from "fs";
+import {existsSync} from "node:fs";
 
 /**
  * the main.ts is loaded by electron and has access to file-system, etc.
@@ -34,6 +37,16 @@ app.whenReady().then(async () => {
         join(process.resourcesPath, '\\daten\\');
 
     allSettingsByName = initSettings.init(pathToDataFolder);
+
+    ipcMain.handle('app:load-theme', (event, args) => {
+        let loadJSON: LoadJSON = new LoadJSON();
+        return loadJSON.loadJSONSync(join(pathToDataFolder, 'theme', 'theme.json'));
+    });
+
+    ipcMain.handle('app:get-resource-path', (event:Electron.IpcMainInvokeEvent, relativePath: string) => {
+        console.log("get res-path: ", process.resourcesPath, pathToDataFolder, relativePath)
+        return join(join(pathToDataFolder, ".."), relativePath);
+    });
 
     let electronWindow:CreateWindow = new CreateWindow(windowWidth, windowHeight,
         allSettingsByName[GlobalSettingsFactory.IS_FULLSCREEN],join(_rootDirName,'preload.js'));
