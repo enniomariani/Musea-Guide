@@ -36,6 +36,11 @@ app.whenReady().then(async () => {
 
     allSettingsByName = initSettings.init(pathToDataFolder);
 
+    ipcMain.handle('app:load-theme', (event, args) => {
+        let loadJSON: LoadJSON = new LoadJSON();
+        return loadJSON.loadJSONSync(join(pathToDataFolder, 'theme', 'theme.json'));
+    });
+
     let electronWindow:CreateWindow = new CreateWindow(windowWidth, windowHeight,
         allSettingsByName[GlobalSettingsFactory.IS_FULLSCREEN],join(_rootDirName,'preload.js'));
 
@@ -50,10 +55,5 @@ app.whenReady().then(async () => {
             electronWindow.close();
             app.quit();
         }
-    });
-
-    ipcMain.handle('app:load-theme', (event, args) => {
-        let loadJSON: LoadJSON = new LoadJSON();
-        return loadJSON.loadJSONSync(join(pathToDataFolder, 'theme', 'theme.json'));
     });
 });
