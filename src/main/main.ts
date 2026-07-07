@@ -7,6 +7,8 @@ import {GlobalSettingsFactory} from "main/globalSettings/GlobalSettingsFactory.j
 import {InitSettings} from "main/globalSettings/InitSettings.js";
 import {MuseaClientMain} from "musea-client/main";
 import {LoadJSON} from "./LoadJSON.js";
+import {readFileSync} from "fs";
+import {existsSync} from "node:fs";
 
 /**
  * the main.ts is loaded by electron and has access to file-system, etc.
@@ -39,6 +41,11 @@ app.whenReady().then(async () => {
     ipcMain.handle('app:load-theme', (event, args) => {
         let loadJSON: LoadJSON = new LoadJSON();
         return loadJSON.loadJSONSync(join(pathToDataFolder, 'theme', 'theme.json'));
+    });
+
+    ipcMain.handle('app:get-resource-path', (event:Electron.IpcMainInvokeEvent, relativePath: string) => {
+        console.log("get res-path: ", process.resourcesPath, pathToDataFolder, relativePath)
+        return join(join(pathToDataFolder, ".."), relativePath);
     });
 
     let electronWindow:CreateWindow = new CreateWindow(windowWidth, windowHeight,
