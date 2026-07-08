@@ -76,7 +76,7 @@ function setVar(name: string, value?: string) {
         document.documentElement.style.setProperty(name, value);
 }
 
-function applyThemeVars(theme: Theme) {
+function applyThemeVars(theme: Theme, pathLogo:string) {
     const c = theme.colors ?? {};
     setVar("--color-background", c.colorBackground);
     setVar("--color-main", c.colorMain);
@@ -107,6 +107,7 @@ function applyThemeVars(theme: Theme) {
     setVar("--color-on-secondary-50", c.onSecondary50);
 
     setVar("--color-secondary-100", c.secondary100);
+    setVar("--color-on-secondary-100", c.onSecondary100);
     setVar("--color-secondary-300", c.secondary300);
 
     setVar("--color-secondary-500-base", c.secondary500Base);
@@ -134,7 +135,7 @@ function applyThemeVars(theme: Theme) {
     setVar("--radius-popup", r.popup);
 
     const a = theme.assets ?? {};
-    setVar("--logo-path", a.logo);
+    setVar("--logo-path", pathLogo);
 }
 
 async function loadFontFaces(backend:IBackend, fonts?: Theme["fonts"]) {
@@ -166,15 +167,15 @@ export async function loadTheme(backend:IBackend) {
     try {
         const json:any|null = await backend.loadTheme();
 
-        console.log("load theme: ", json)
-
         if(json === null){
             console.warn("Failed to load theme in folder resources/daten/theme, use default-css-values in main.css");
             return; //use CSS-default values if theme does not exist
         }
 
+        const pathLogo:string = await backend.getResourcePath(json.assets.logo);
+
         // Apply variables first so text size/line-height update early
-        applyThemeVars(json);
+        applyThemeVars(json, pathLogo);
 
         // Then load and register font faces (non-blocking for initial render)
         await loadFontFaces(backend, json.fonts).catch(() => {});
